@@ -244,11 +244,11 @@ const shouldRenderObjectProperties = computed(() => {
 })
 
 const shouldShowEnumDescriptions = computed(() => {
-  if (!optimizedValue.value?.['x-enumDescriptions']) {
+  if (!optimizedValue.value?.['x-enum-descriptions']) {
     return false
   }
 
-  const enumDescriptions = optimizedValue.value['x-enumDescriptions']
+  const enumDescriptions = optimizedValue.value['x-enum-descriptions']
 
   return (
     typeof enumDescriptions === 'object' && !Array.isArray(enumDescriptions)
@@ -326,7 +326,7 @@ const shouldShowEnumDescriptions = computed(() => {
             </div>
             <div class="property-description">
               <ScalarMarkdown
-                :value="optimizedValue?.['x-enumDescriptions']?.[enumValue]" />
+                :value="optimizedValue?.['x-enum-descriptions']?.[enumValue]" />
             </div>
           </div>
         </div>
@@ -337,9 +337,17 @@ const shouldShowEnumDescriptions = computed(() => {
             v-for="enumValue in visibleEnumValues"
             :key="enumValue"
             class="property-enum-value">
-            <span class="property-enum-value-label">
-              {{ enumValue }}
-            </span>
+            <div class="property-enum-value-content">
+              <span class="property-enum-value-label">
+                {{ enumValue }}
+              </span>
+              <span
+                v-if="optimizedValue?.['x-enum-descriptions']?.[enumValue]"
+                class="property-enum-value-description">
+                <ScalarMarkdown
+                  :value="optimizedValue['x-enum-descriptions'][enumValue]" />
+              </span>
+            </div>
           </li>
           <Disclosure
             v-if="hasLongEnumList"
@@ -349,9 +357,19 @@ const shouldShowEnumDescriptions = computed(() => {
                 v-for="enumValue in remainingEnumValues"
                 :key="enumValue"
                 class="property-enum-value">
-                <span class="property-enum-value-label">
-                  {{ enumValue }}
-                </span>
+                <div class="property-enum-value-content">
+                  <span class="property-enum-value-label">
+                    {{ enumValue }}
+                  </span>
+                  <span
+                    v-if="optimizedValue?.['x-enum-descriptions']?.[enumValue]"
+                    class="property-enum-value-description">
+                    <ScalarMarkdown
+                      :value="
+                        optimizedValue['x-enum-descriptions'][enumValue]
+                      " />
+                  </span>
+                </div>
               </li>
             </DisclosurePanel>
             <DisclosureButton class="enum-toggle-button">
@@ -571,6 +589,11 @@ const shouldShowEnumDescriptions = computed(() => {
   align-items: stretch;
   position: relative;
 }
+.property-enum-value-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 .property-enum-value-label {
   display: flex;
   padding: 3px 0;
@@ -578,6 +601,15 @@ const shouldShowEnumDescriptions = computed(() => {
 }
 .property-enum-value:last-of-type .property-enum-value-label {
   padding-bottom: 0;
+}
+.property-enum-value-description {
+  display: block;
+  padding: 0 0 3px 0;
+  color: var(--scalar-color-2);
+  font-size: var(--scalar-micro);
+}
+.property-enum-value-description :deep(p) {
+  margin: 0;
 }
 .property-enum-value::before {
   content: '';

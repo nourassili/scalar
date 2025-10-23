@@ -255,7 +255,7 @@ describe('SchemaProperty sub-schema', () => {
           'enum': ['Ice giant', 'Dwarf', 'Gas', 'Iron'],
           'title': 'Planet',
           'description': 'The type of planet',
-          'x-enumDescriptions': {
+          'x-enum-descriptions': {
             'Ice giant': 'A planet with a thick atmosphere of water, methane, and ammonia ice',
             'Dwarf': 'A planet that is not massive enough to clear its orbit',
             'Gas': 'A planet with a thick atmosphere of hydrogen and helium',
