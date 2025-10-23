@@ -1,5 +1,6 @@
 import { type SecurityScheme, securitySchemeSchema } from '@scalar/oas-utils/entities/spec'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { Base64 } from 'js-base64'
 
 import { buildRequestSecurity } from './build-request-security'
 
@@ -71,7 +72,7 @@ describe('buildRequestSecurity', () => {
     it('should handle basic auth', () => {
       basic.scheme = 'basic'
       const result = buildRequestSecurity([basic])
-      expect(result.headers['Authorization']).toBe(`Basic ${btoa('scalar:user')}`)
+      expect(result.headers['Authorization']).toBe(`Basic ${Base64.encode('scalar:user')}`)
     })
 
     it('should handle basic auth with empty credentials', () => {
@@ -79,6 +80,27 @@ describe('buildRequestSecurity', () => {
       basic.password = ''
       const result = buildRequestSecurity([basic])
       expect(result.headers['Authorization']).toBe('Basic username:password')
+    })
+
+    it('should handle basic auth with Unicode characters (Polish)', () => {
+      basic.username = 'admin'
+      basic.password = 'żółć'
+      const result = buildRequestSecurity([basic])
+      expect(result.headers['Authorization']).toBe(`Basic ${Base64.encode('admin:żółć')}`)
+    })
+
+    it('should handle basic auth with Unicode characters (Cyrillic)', () => {
+      basic.username = 'user'
+      basic.password = 'тест'
+      const result = buildRequestSecurity([basic])
+      expect(result.headers['Authorization']).toBe(`Basic ${Base64.encode('user:тест')}`)
+    })
+
+    it('should handle basic auth with Unicode characters (emoji)', () => {
+      basic.username = 'admin'
+      basic.password = '🔐🚀'
+      const result = buildRequestSecurity([basic])
+      expect(result.headers['Authorization']).toBe(`Basic ${Base64.encode('admin:🔐🚀')}`)
     })
 
     it('should handle bearer auth', () => {
