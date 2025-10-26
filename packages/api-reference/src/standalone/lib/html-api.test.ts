@@ -143,6 +143,16 @@ describe('html-api', () => {
       findDataAttributes(document, config)
       expect(document.body.classList.contains('light-mode')).toBe(true)
     })
+
+    it('does not add any mode class when darkMode is undefined', () => {
+      const config = apiReferenceConfigurationSchema.parse({
+        _integration: 'html',
+      })
+
+      findDataAttributes(document, config)
+      expect(document.body.classList.contains('dark-mode')).toBe(false)
+      expect(document.body.classList.contains('light-mode')).toBe(false)
+    })
   })
 
   describe('getConfigurationFromDataAttributes', () => {
