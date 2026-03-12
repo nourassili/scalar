@@ -108,7 +108,16 @@ const schema = computed(() => {
 })
 
 const shouldShowToggle = computed(() => {
-  if (props.noncollapsible || props.level === 0) {
+  if (props.noncollapsible) {
+    return false
+  }
+
+  // Allow toggle for additionalProperties even at level 0
+  if (props.additionalProperties) {
+    return true
+  }
+
+  if (props.level === 0) {
     return false
   }
 
