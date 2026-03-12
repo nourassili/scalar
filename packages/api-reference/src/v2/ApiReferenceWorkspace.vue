@@ -194,7 +194,12 @@ onCustomEvent(root, 'scalar-update-active-document', (event) => {
 // TODO: persistence should be hoisted into standalone
 // Client side integrations will want to handle dark mode externally
 const { toggleColorMode, isDarkMode } = useColorMode({
-  initialColorMode: selectedConfiguration.value.darkMode ? 'dark' : undefined,
+  initialColorMode:
+    selectedConfiguration.value.darkMode === true
+      ? 'dark'
+      : selectedConfiguration.value.darkMode === false
+        ? 'light'
+        : undefined,
   overrideColorMode: selectedConfiguration.value.forceDarkModeState,
 })
 

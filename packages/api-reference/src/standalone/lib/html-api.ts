@@ -138,11 +138,12 @@ export function findDataAttributes(doc: Document, configuration: ApiReferenceCon
   /** @deprecated Use the new <script id="api-reference" data-url="/scalar.json" /> API instead. */
   const specUrlElement = doc.querySelector('[data-spec-url]')
 
-  if (configuration?.darkMode) {
+  if (configuration?.darkMode === true) {
     doc.body?.classList.add('dark-mode')
-  } else {
+  } else if (configuration?.darkMode === false) {
     doc.body?.classList.add('light-mode')
   }
+  // If darkMode is undefined, don't add any class - let useColorMode handle it
 
   const container = createContainer(doc, specElement || specUrlElement)
 
